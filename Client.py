@@ -11,29 +11,14 @@ class Client:
         self.sock = sock
         self.sock.connect((host, port))
         self.sock.send(b'1')
-    def send(self):
-        text=self.lineEdit.text()
-        self.textBrowser.append(text)
-        self.textBrowser.update()
-        self.lineEdit.setText("")
-
     def sendThreadFunc(self):
-        count=1
         while True:
             try:
-
-                if count == 1:
-                    nickname = input()
-                    print('Now Lets Chat, ', nickname)
-                    self.sock.send(nickname.encode())
-                    count+=1
-
-                myword = input()
-                myword = nickname + ":" + myword
-                self.sock.send(myword.encode())
-
+                word = self.sock.recv(1024) # socket.recv(recv_size)
+                print(word.decode())
             except ConnectionAbortedError:
                 print('Server closed this connection!')
+
             except ConnectionResetError:
                 print('Server is closed!')
 
@@ -48,14 +33,14 @@ class Client:
             except ConnectionResetError:
                 print('Server is closed!')
 
-class Main(QMainWindow,client_ui.Ui_MainWindow):
+class Main(QMainWindow,client_ui.Ui_MainWindow,Client):
     def __init__(self):
         super(self.__class__,self).__init__()
         self.setupUi(self)
         self.pushButton_2.setText("Send")
-        self.pushButton_2.clicked.connect(self.send)
-
-    def send(self):
+        self.pushButton_2.clicked.connect(self.login)
+        self.pushButton.clicked.connect(self.send)
+    def login(self):
         text="Welcome to chat room !" + self.textEdit.toPlainText() + "\nNow let\'s chat !"  +  self.textEdit.toPlainText()
         self.textBrowser.append(text)
         self.textBrowser.update()
@@ -63,6 +48,14 @@ class Main(QMainWindow,client_ui.Ui_MainWindow):
         self.pushButton_2.setDisabled(True)
         self.textEdit.setDisabled(True)
         self.pushButton.setDisabled(False)
+        self.nickname=self.textEdit.toPlainText()
+        #self.sock.send(self.nickname.encode())
+
+    def send(self):
+        #self.sock.send(self.lineEdit.text().encode(()))
+        mes = " \n                                         " + self.lineEdit.text() + ": You"
+        self.textBrowser.append(mes)
+        self.textBrowser.update()
 
 def main():
     app=QApplication(sys.argv)
