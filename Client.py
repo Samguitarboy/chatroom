@@ -54,11 +54,15 @@ class Main(QMainWindow,client_ui.Ui_MainWindow):
         self.setupUi(self)
         self.pushButton_2.setText("Send")
         self.pushButton_2.clicked.connect(self.send)
+
     def send(self):
         text="Welcome to chat room !" + self.textEdit.toPlainText() + "\nNow let\'s chat !"  +  self.textEdit.toPlainText()
         self.textBrowser.append(text)
         self.textBrowser.update()
         self.lineEdit.setText("")
+        self.pushButton_2.setDisabled(True)
+        self.textEdit.setDisabled(True)
+        self.pushButton.setDisabled(False)
 
 def main():
     app=QApplication(sys.argv)
