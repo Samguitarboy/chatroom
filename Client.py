@@ -11,7 +11,11 @@ class Client:
         self.sock = sock
         self.sock.connect((host, port))
         self.sock.send(b'1')
-
+    def send(self):
+        text=self.lineEdit.text()
+        self.textBrowser.append(text)
+        self.textBrowser.update()
+        self.lineEdit.setText("")
 
     def sendThreadFunc(self):
         count=1
@@ -48,6 +52,13 @@ class Main(QMainWindow,client_ui.Ui_MainWindow):
     def __init__(self):
         super(self.__class__,self).__init__()
         self.setupUi(self)
+        self.pushButton_2.setText("Send")
+        self.pushButton_2.clicked.connect(self.send)
+    def send(self):
+        text="Welcome to chat room !" + self.textEdit.toPlainText() + "\nNow let\'s chat !"  +  self.textEdit.toPlainText()
+        self.textBrowser.append(text)
+        self.textBrowser.update()
+        self.lineEdit.setText("")
 
 def main():
     app=QApplication(sys.argv)
